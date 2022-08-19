@@ -67,6 +67,7 @@ module Network.TLS.Context
     , getPeerFinished
     ) where
 
+import Debug.Trace
 import Network.TLS.Backend
 import Network.TLS.Context.Internal
 import Network.TLS.Struct
@@ -94,6 +95,7 @@ import Data.IORef
 import Network.Socket (Socket)
 #endif
 import System.IO (Handle)
+import qualified Data.ByteString as B
 
 class TLSParams a where
     getTLSCommonParams :: a -> CommonParams
@@ -202,7 +204,10 @@ contextNew backend params = liftIO $ do
         recordLayer = RecordLayer
             { recordEncode    = encodeRecord ctx
             , recordEncode13  = encodeRecord13 ctx
-            , recordSendBytes = sendBytes ctx
+            , recordSendBytes = \pld ->
+                do
+                  traceM $ "recordSendBytes: " <> show (B.length pld)
+                  sendBytes ctx pld
             , recordRecv      = recvRecord ctx
             , recordRecv13    = recvRecord13 ctx
             }

@@ -13,6 +13,7 @@ module Network.TLS.Record.Writing
     , sendBytes
     ) where
 
+import Debug.Trace
 import Network.TLS.Cap
 import Network.TLS.Cipher
 import Network.TLS.Context.Internal
@@ -65,5 +66,6 @@ prepareRecord13 = runTxState
 
 sendBytes :: Context -> ByteString -> IO ()
 sendBytes ctx dataToSend = do
+    traceM $ "sendBytes: " <> show (B.length dataToSend)
     withLog ctx $ \logging -> loggingIOSent logging dataToSend
     contextSend ctx dataToSend
