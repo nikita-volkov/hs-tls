@@ -21,6 +21,7 @@ module Network.TLS.IO
     , loadPacket13
     ) where
 
+import Debug.Trace
 import Control.Exception (finally, throwIO)
 import Control.Monad.Reader
 import Control.Monad.State.Strict
@@ -68,7 +69,13 @@ writePacketBytes ctx recordLayer pkt = do
 
 sendPacket13 :: Context -> Packet13 -> IO ()
 sendPacket13 ctx@Context{ctxRecordLayer = recordLayer} pkt =
+    traceM loggedMsg >>
     writePacketBytes13 ctx recordLayer pkt >>= recordSendBytes recordLayer
+  where
+    loggedMsg =
+      case pkt of
+        AppData13 bs -> "sendPacket13: AppData13: Payload Size: " <> show (B.length bs)
+        _ -> "sendPacket13: " <> show pkt
 
 writePacketBytes13 :: Monoid bytes
                    => Context -> RecordLayer bytes -> Packet13 -> IO bytes

@@ -1,5 +1,5 @@
 resolver: nightly-2022-08-19
 packages:
   - core
-  - debug
-  - session
+  # - debug
+  # - session

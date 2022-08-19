@@ -132,41 +132,43 @@ Library
   if flag(compat)
     cpp-options:     -DSSLV2_COMPATIBLE
 
-Test-Suite test-tls
-  Default-Language:  Haskell2010
-  type:              exitcode-stdio-1.0
-  hs-source-dirs:    Tests
-  Main-is:           Tests.hs
-  other-modules:     Certificate
-                     Ciphers
-                     Connection
-                     Marshalling
-                     PipeChan
-                     PubKey
-  Build-Depends:     base >= 3 && < 5
-                   , async >= 2.0
-                   , data-default-class
-                   , tasty
-                   , tasty-quickcheck
-                   , tls
-                   , QuickCheck
-                   , cryptonite
-                   , bytestring
-                   , asn1-types
-                   , x509
-                   , x509-validation
-                   , hourglass
-  ghc-options:       -Wall -fno-warn-unused-imports
+-- Test-Suite test-tls
+--   Default-Language:  Haskell2010
+--   type:              exitcode-stdio-1.0
+--   hs-source-dirs:    Tests
+--   Main-is:           Tests.hs
+--   other-modules:     Certificate
+--                      Ciphers
+--                      Connection
+--                      Marshalling
+--                      PipeChan
+--                      PubKey
+--   Build-Depends:     base >= 3 && < 5
+--                    , async >= 2.0
+--                    , data-default-class
+--                    , tasty
+--                    , tasty-quickcheck
+--                    , tls
+--                    , QuickCheck
+--                    , cryptonite
+--                    , bytestring
+--                    , asn1-types
+--                    , x509
+--                    , x509-validation
+--                    , hourglass
+--   ghc-options:       -Wall -fno-warn-unused-imports
 
 Test-Suite debug-tls
   Default-Language:  Haskell2010
   type:              exitcode-stdio-1.0
   hs-source-dirs:    Debug
   Main-is:           Main.hs
-  Build-Depends:     base
-                   , data-default-class
-                   , tls
-                   , x509-system
+  Build-Depends:     
+    base,
+    bytestring,
+    connection,
+    data-default-class,
+    tls
 
 Benchmark bench-tls
   Default-Language:  Haskell2010
