@@ -158,6 +158,16 @@ Test-Suite test-tls
                    , hourglass
   ghc-options:       -Wall -fno-warn-unused-imports
 
+Test-Suite debug-tls
+  Default-Language:  Haskell2010
+  type:              exitcode-stdio-1.0
+  hs-source-dirs:    Debug
+  Main-is:           Main.hs
+  Build-Depends:     base
+                   , data-default-class
+                   , tls
+                   , x509-system
+
 Benchmark bench-tls
   Default-Language:  Haskell2010
   hs-source-dirs:    Benchmarks Tests
