@@ -204,10 +204,7 @@ contextNew backend params = liftIO $ do
         recordLayer = RecordLayer
             { recordEncode    = encodeRecord ctx
             , recordEncode13  = encodeRecord13 ctx
-            , recordSendBytes = \pld ->
-                do
-                  traceM $ "recordSendBytes: " <> show (B.length pld)
-                  sendBytes ctx pld
+            , recordSendBytes = sendBytes ctx
             , recordRecv      = recvRecord ctx
             , recordRecv13    = recvRecord13 ctx
             }

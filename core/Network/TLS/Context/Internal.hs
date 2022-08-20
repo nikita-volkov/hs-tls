@@ -201,7 +201,8 @@ contextGetInformation ctx = do
         _                -> return Nothing
 
 contextSend :: Context -> ByteString -> IO ()
-contextSend c b = updateMeasure c (addBytesSent $ B.length b) >> (backendSend $ ctxConnection c) b
+contextSend c b = do
+  updateMeasure c (addBytesSent $ B.length b) >> (backendSend $ ctxConnection c) b
 
 contextRecv :: Context -> Int -> IO ByteString
 contextRecv c sz = updateMeasure c (addBytesReceived sz) >> (backendRecv $ ctxConnection c) sz

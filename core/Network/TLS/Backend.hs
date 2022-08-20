@@ -21,6 +21,7 @@ module Network.TLS.Backend
     , Backend(..)
     ) where
 
+import Debug.Trace
 import Network.TLS.Imports
 import qualified Data.ByteString as B
 import System.IO (Handle, hSetBuffering, BufferMode(..), hFlush, hClose)
@@ -71,7 +72,7 @@ safeRecv s buf = do
 #ifdef INCLUDE_NETWORK
 instance HasBackend Network.Socket where
     initializeBackend _ = return ()
-    getBackend sock = Backend (return ()) (Network.close sock) (Network.sendAll sock) recvAll
+    getBackend sock = Backend flush (Network.close sock) send recvAll
       where recvAll n = B.concat <$> loop n
               where loop 0    = return []
                     loop left = do
@@ -79,6 +80,13 @@ instance HasBackend Network.Socket where
                         if B.null r
                             then return []
                             else (r:) <$> loop (left - B.length r)
+            flush = do
+              traceM $ "Backend/flush"
+              return ()
+            send pld = do
+              traceM $ "Backend/send: " <> show (B.length pld)
+              Network.sendAll sock pld
+
 #endif
 
 #ifdef INCLUDE_HANS
