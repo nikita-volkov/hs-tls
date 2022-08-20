@@ -61,9 +61,12 @@ instance HasBackend Backend where
 
 safeRecv :: Network.Socket -> Int -> IO ByteString
 #ifndef SOCKET_ACCEPT_RECV_WORKAROUND
-safeRecv = Network.recv
+safeRecv sock amount = do
+  traceM $ "safeRecv/no-workaround: " <> show amount
+  Network.recv sock amount
 #else
 safeRecv s buf = do
+    traceM $ "safeRecv/workaround: " <> show buf
     var <- newEmptyMVar
     forkIO $ Network.recv s buf `E.catch` (\(_::IOException) -> return S8.empty) >>= putMVar var
     takeMVar var
