@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 -- |
 -- Module      : Network.TLS.Backend
 -- License     : BSD-style
@@ -22,6 +23,9 @@ module Network.TLS.Backend
     ) where
 
 import Debug.Trace
+import Control.Exception
+import Control.Concurrent
+
 import Network.TLS.Imports
 import qualified Data.ByteString as B
 import System.IO (Handle, hSetBuffering, BufferMode(..), hFlush, hClose)
@@ -60,17 +64,11 @@ instance HasBackend Backend where
 #endif
 
 safeRecv :: Network.Socket -> Int -> IO ByteString
-#ifndef SOCKET_ACCEPT_RECV_WORKAROUND
-safeRecv sock amount = do
-  traceM $ "safeRecv/no-workaround: " <> show amount
-  Network.recv sock amount
-#else
 safeRecv s buf = do
     traceM $ "safeRecv/workaround: " <> show buf
     var <- newEmptyMVar
-    forkIO $ Network.recv s buf `E.catch` (\(_::IOException) -> return S8.empty) >>= putMVar var
+    forkIO $ Network.recv s buf `catch` (\(_::IOException) -> return mempty) >>= putMVar var
     takeMVar var
-#endif
 
 #ifdef INCLUDE_NETWORK
 instance HasBackend Network.Socket where
