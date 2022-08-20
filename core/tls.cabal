@@ -161,6 +161,10 @@ Library
 Test-Suite debug-tls
   Default-Language:  Haskell2010
   type:              exitcode-stdio-1.0
+  ghc-options:
+    -O2
+    -threaded
+    "-with-rtsopts=-N -I0 -qg"
   hs-source-dirs:    Debug
   Main-is:           Main.hs
   Build-Depends:     
